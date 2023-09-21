@@ -1,0 +1,128 @@
+﻿@model RendicionViaticos.ViewModels.PerDiemStatementsVM
+
+@{
+    ViewData["Title"] = "Lista de rendiciones de viaticos";
+}
+
+<h2>LISTA DE rendiciones de viaticos</h2>
+
+<div class="row container form-inline col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <p>
+        <a asp-action="Create" type="button" class="btn btn-outline-info">Agregar</a>
+    </p>
+</div>
+<div class="card border-dark mb-3 main-table">
+    <div class="card-header text-dark"><h4>Datos de las comisiones</h4></div>
+    <div class="card-body text-dark">
+        <form asp-action="OwnList" asp-controller="Commission" method="post">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            <label asp-for="statementHeader.EJERCICIO" class="control-label font-weight-bold"></label>
+                        </th>
+                        <th>
+                            <label asp-for="statementHeader.CORRELATIVO" class="control-label font-weight-bold"></label>
+                        </th>
+                        <th>
+                            <label asp-for="statementHeader.NRO_CP" class="control-label font-weight-bold"></label>
+                        </th>
+                        <th>
+                            <label asp-for="statementHeader.NRO_SIAF" class="control-label font-weight-bold"></label>
+                        </th>
+                        <th>
+                            <label asp-for="statementHeader.MONTO_ENCARGO" class="control-label font-weight-bold"></label>
+                        </th>
+                        <th>
+                            <label asp-for="statementHeader.MONTO_RENDIDO" class="control-label font-weight-bold"></label>
+                        </th>
+                        <th>
+                            <label asp-for="statementHeader.SALDO" class="control-label font-weight-bold"></label>
+                        </th>
+                        <th>
+                            <label asp-for="statementHeader.MONTO_RENDICION" class="control-label font-weight-bold"></label>
+                        </th>
+                        <th>
+                            <label asp-for="statementHeader.ESTADO" class="control-label font-weight-bold"></label>
+                        </th>
+                        <th>
+                            <label asp-for="statementHeader.OBSERVACION" class="control-label font-weight-bold"></label>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.statementHeaders)
+                    {
+                        <tr>
+                            <td>
+                                @item.EJERCICIO
+                            </td>
+                            <td>
+                                @item.CORRELATIVO
+                            </td>
+                            <td>
+                                @item.NRO_CP
+                            </td>
+                            <td>
+                                @item.NRO_SIAF
+                            </td>
+                            <td>
+                                @item.MONTO_ENCARGO
+                            </td>
+                            <td>
+                                @item.MONTO_RENDIDO
+                            </td>
+                            <td>
+                                @item.SALDO
+                            </td>
+                            <td>
+                                @item.MONTO_RENDICION
+                            </td>
+                            <td>
+                                @item.ESTADO
+                            </td>
+                            <td>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <input type="hidden" id="page_id" name="page" />
+        </form>
+    </div>
+</div>
+
+<nav aria-label="...">
+    <ul class="pagination">
+        <!--<li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1">Previous</a>
+        </li>-->
+        @for (int i = 1; i <= Model.TotalPages; i++)
+        {
+            @if (i == Model.CurrentPage)
+            {
+                <li class="page-item active">
+                    <a class="page-link" href="#">@i<span class="sr-only">(current)</span></a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item"><a class="page-link" href="javascript:PagerClick(@i);">@i</a></li>
+            }
+        }
+        <!--<li class="page-item">
+            <a class="page-link" href="#">Next</a>
+        </li>-->
+    </ul>
+</nav>
+
+<p class="text-xl-right">Nota: Solo puedes editar o cancelar la solicitud cuendo se encuentra en pendiente</p>
+
+<script>setTimeout('document.location.reload()', 10000);</script>
+
+<script type="text/javascript">
+    function PagerClick(index) {
+        document.getElementById("page_id").value = index;
+        document.forms[1].submit();
+    }
+</script>

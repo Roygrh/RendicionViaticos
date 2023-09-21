@@ -1,0 +1,650 @@
+﻿@model RendicionViaticos.ViewModels.PerDiemStatementVM
+
+@{
+    ViewData["Title"] = "Solicitar";
+    var years = new SelectList(Model.Years, "CONCEPTO_ID", "NOMBRE_CONCEPTO");
+}
+
+<h1>Solicitar una comisión</h1>
+
+<form asp-controller="Commission" asp-action="Create" enctype="multipart/form-data" method="post">
+    <div class="form-horizontal">
+        <hr />
+        <div class="card border-dark mb-3" >
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="card-header text-dark col-xs-12 col-sm-12 col-md-12 col-lg-12 form-inline">
+                <h4 class="col-xs-6 col-sm-6 col-md-6 col-lg-6">Complete los datos requeridos</h4>
+                @if (!string.IsNullOrEmpty(Model.Mensaje))
+                {
+                    <p class="text-right text-danger col-xs-6 col-sm-6 col-md-6 col-lg-6"><small class="font-weight-bold">@Model.Mensaje</small></p>
+                }
+            </div>
+            <div class="card-body text-dark">
+
+                <div class="row justify-content-xl-end justify-content-sm-end justify-content-md-end justify-content-lg-end">
+                    <div class="form-group form-inline col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="commissionTypeSwitch">
+                            <label class="custom-control-label" id="FCOMISION" for="commissionTypeSwitch">COMISIÓN PROGRAMADA</label>
+                        </div>
+                        @Html.HiddenFor(model => model.COMISION_TIPO, new { Value = "1" })
+                    </div>
+
+                    <div class="form-group form-inline col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                        
+                    </div>
+
+                    <div class="form-group form-inline col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                        <label asp-for="ESTADO" class="control-label font-weight-bold col-xs-4 col-sm-4 col-md-4 col-lg-4"></label>
+                        <div class="form-inline input-group col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text text-dark"><i class="fas fa-file-alt"></i></span>
+                            </div>
+                            <input asp-for="ESTADO" class="form-control" disabled="disabled" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group form-inline col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        <label asp-for="NOMBRE_USUARIO" class="control-label font-weight-bold col-xs-4 col-sm-4 col-md-4 col-lg-4"></label>
+                        <div class="form-inline input-group col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text text-dark"><i class="fas fa-user"></i></span>
+                            </div>
+                            <input asp-for="NOMBRE_USUARIO" class="form-control" disabled="disabled" />
+                        </div>
+                    </div>
+
+                    <div class="form-group form-inline col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        <label asp-for="NOMBRE_DEPARTAMENTO" class="control-label font-weight-bold col-xs-4 col-sm-4 col-md-4 col-lg-4"></label>
+                        <div class="form-inline input-group col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text text-dark"><i class="fas fa-warehouse"></i></span>
+                            </div>
+                            <input asp-for="NOMBRE_DEPARTAMENTO" class="form-control" disabled="disabled" />
+                            @Html.HiddenFor(model => model.NOMBRE_DEPARTAMENTO)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group form-inline col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        <label asp-for="DNI_USUARIO" class="control-label font-weight-bold col-xs-4 col-sm-4 col-md-4 col-lg-4"></label>
+                        <div class="col-md-8 form-inline input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text text-dark"><i class="fas fa-address-card"></i></span>
+                            </div>
+                            <input asp-for="DNI_USUARIO_STRING" class="form-control" disabled="disabled" />
+                        </div>
+                    </div>
+
+                    <div class="form-group form-inline col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        <label asp-for="FECHA_COMISION" class="control-label col-md-4 font-weight-bold"></label>
+                        <div class="col-md-8 form-inline input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text text-dark"><i class="fas fa-calendar-alt"></i></span>
+                            </div>
+                            <input class="form-control text-box single-line" data-val="true" data-val-date="The field Fecha de registro must be a date." disabled="disabled" id="FECHA_CREACION" name="FECHA_CREACION" type="text" value="">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row ">
+                    <div class="form-group form-inline col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        <label asp-for="CODIGO_MOTIVO" class="control-label font-weight-bold col-xs-4 col-sm-4 col-md-4 col-lg-4"></label>
+                        <div class="col-md-8 form-inline input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text text-dark"><i class="fas fa-list-ul"></i></span>
+                            </div>
+                            <select asp-for="CODIGO_MOTIVO" class="form-control" id="Motivos"
+                                    asp-items="@motives"></select>
+                            <!--<input asp-for="MOTIVO" placeholder="Ingresa el motivo" class="form-control text-box single-line" data-val="true" id="MOTIVO" name="MOTIVO" type="text" value="">-->
+                        </div>
+                        <span asp-validation-for="CODIGO_MOTIVO" class="text-danger font-weight-bold areas-message text-right"></span>
+                    </div>
+
+                    <div class="form-group form-inline col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        <label asp-for="WorkerList" class="control-label font-weight-bold col-xs-4 col-sm-4 col-md-4 col-lg-4"></label>
+                        <div class="col-md-8 form-inline input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text text-dark"><i class="fas fa-list-ul"></i></span>
+                            </div>
+                            <select asp-for="DNI_AUTORIZA_STRING" class="form-control" id="worker"
+                                    asp-items="@workers"></select>
+                            <!--<input asp-for="MOTIVO" placeholder="Ingresa el motivo" class="form-control text-box single-line" data-val="true" id="MOTIVO" name="MOTIVO" type="text" value="">-->
+                        </div>
+                        <span asp-validation-for="DNI_AUTORIZA_STRING" class="text-danger font-weight-bold areas-message text-right"></span>
+                    </div>
+                </div>
+
+                <div class="row" id="FILA_NORMAL">
+                    <div class="form-group form-inline col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        <label asp-for="FECHA_SALIDA" class="control-label col-md-4 font-weight-bold"></label>
+                        <div class="col-md-8 form-inline input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text text-dark"><i class="fas fa-calendar-alt"></i></span>
+                            </div>
+                            <input asp-for="FECHA_SALIDA_STRING" class="form-control exit" , placeholder="ingrese la fecha de salida" onfocusout="validateDate(this)" />
+                            @Html.ValidationMessageFor(model => model.FECHA_SALIDA_STRING, "", new { @class = "text-danger font-weight-bold" })
+                        </div>
+                    </div>
+
+                    <div class="form-group form-inline col-xs-6 col-sm-6 col-md-6 col-lg-6" id="CUADRO_FECHA_RETORNO">
+                        <label asp-for="FECHA_RETORNO" class="control-label col-md-4 font-weight-bold"></label>
+                        <div class="col-md-8 form-inline input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text text-dark"><i class="fas fa-calendar-alt"></i></span>
+                            </div>
+                            <input asp-for="FECHA_RETORNO_STRING" class="form-control return" , placeholder="ingrese la fecha de salida" onfocusout="validateDate(this)" />
+                            @Html.ValidationMessageFor(model => model.FECHA_RETORNO_STRING, "", new { @class = "text-danger font-weight-bold" })
+                        </div>
+                    </div>
+                </div>
+
+                <!---->
+                <div class="row" id="FILA_PROGRAMADA">
+                    <div class="form-group form-inline col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        <label asp-for="FECHA_PROGRAMADA" class="control-label col-md-4 font-weight-bold"></label>
+                        <div class="col-md-8 form-inline input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text text-dark"><i class="fas fa-calendar-alt"></i></span>
+                            </div>
+                            <input asp-for="FECHA_PROGRAMADA_STRING" class="form-control exit" , placeholder="ingrese la fecha de salida" onfocusout="validateDate(this)" />
+                            @Html.ValidationMessageFor(model => model.FECHA_PROGRAMADA_STRING, "", new { @class = "text-danger font-weight-bold" })
+                            @Html.HiddenFor(model => model.FECHA_PROGRAMADA_STRING)
+                        </div>
+                    </div>
+
+                    <div class="form-group form-inline col-xs-6 col-sm-6 col-md-6 col-lg-6" id="CUADRO_FECHA_RETORNO">
+                        <label asp-for="FECHA_RETORNO_PROGRAMADA" class="control-label col-md-4 font-weight-bold"></label>
+                        <div class="col-md-8 form-inline input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text text-dark"><i class="fas fa-calendar-alt"></i></span>
+                            </div>
+                            <input asp-for="FECHA_RETORNO_PROGRAMADA" class="form-control returnPro" , placeholder="ingrese la fecha de salida" onfocusout="validateDate(this)" />
+                            @Html.ValidationMessageFor(model => model.FECHA_RETORNO_PROGRAMADA, "", new { @class = "text-danger font-weight-bold" })
+                        </div>
+                    </div>
+
+                    <div class="form-group form-inline col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        @Html.LabelFor(model => model.HORA_RETORNO_PROGRAMADA, htmlAttributes: new { @class = "control-label col-md-4 font-weight-bold" })
+                        <div class="col-md-8 form-inline input-group clockpicker">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text text-dark"><i class="fas fa-clock"></i></span>
+                            </div>
+                            <input class="form-control text-box single-line right-format" id="HORA_RETORNO_PROGRAMADA" name="HORA_RETORNO_PROGRAMADA" placeholder="Se tomara cuando se retorne" type="text" disabled>
+                            @Html.ValidationMessageFor(model => model.HORA_RETORNO_PROGRAMADA, "", new { @class = "text-danger font-weight-bold" })
+                        </div>
+                    </div>
+                </div>
+                <!---->
+
+                <div class="row" id="FILA_NORMAL_2">
+                    <div class="form-group form-inline col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        @Html.LabelFor(model => model.HORA_SALIDA, htmlAttributes: new { @class = "control-label col-md-4 font-weight-bold" })
+                        <div class="col-md-8 form-inline input-group clockpicker">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text text-dark"><i class="fas fa-clock"></i></span>
+                            </div>
+                            <input class="form-control text-box single-line right-format return" id="HORA_SALIDA" name="HORA_SALIDA" placeholder="ingrese la hora de salida" type="text" value="@DateTime.Now.ToString("hh:mm tt")">
+                            @Html.ValidationMessageFor(model => model.HORA_SALIDA, "", new { @class = "text-danger font-weight-bold" })
+                        </div>
+                    </div>
+
+                    <div class="form-group form-inline col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        @Html.LabelFor(model => model.HORA_RETORNO, htmlAttributes: new { @class = "control-label col-md-4 font-weight-bold" })
+                        <div class="col-md-8 form-inline input-group clockpicker">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text text-dark"><i class="fas fa-clock"></i></span>
+                            </div>
+                            <input class="form-control text-box single-line right-format " id="HORA_RETORNO" name="HORA_RETORNO" placeholder="Se tomara cuando se retorne" type="text" disabled>
+                            @Html.ValidationMessageFor(model => model.HORA_RETORNO, "", new { @class = "text-danger font-weight-bold" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row justify-content-xl-end justify-content-sm-end justify-content-md-end justify-content-lg-end">
+                    <div class="form-group form-inline col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                        <span class="validate-formulary text-danger font-weight-bold"></span>
+                    </div>
+                    <div class="form-group form-inline col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="customSwitches">
+                            <label class="custom-control-label" id="FRETORNO" for="customSwitches">Con hora de retorno</label>
+                        </div>
+                        @Html.HiddenFor(model => model.FLAG_SRETORNO, new { Value = "1" })
+                    </div>
+                </div>
+
+                <div class="row ">
+                    <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <label asp-for="MOTIVO" class="control-label font-weight-bold text-center col-xs-12 col-sm-12 col-md-12 col-lg-12"></label>
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-inline input-group">
+                            <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                            </div>
+                            <div class="input-group-prepend">
+                                <span class="input-group-text text-dark"><i class="fas fa-align-justify"></i></span>
+                            </div>
+                            <textarea asp-for="MOTIVO" placeholder="Ingresa el motivo" class="form-control text-box single-line" data-val="true" id="MOTIVO" name="MOTIVO" type="text" value=""></textarea>
+                            <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                            </div>
+                        </div>
+                        <span class="text-danger font-weight-bold motive-message"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-8 form-inline">
+                        <span class="btn btn-outline-secondary btn-file" onchange="showName()" id="file-button">
+                            <i id="icon-file" class="fa fa-upload"></i>
+                            <span id="name-button">Adjuntar un archivo para la solicitud</span>
+                            <input type="file" name="file" id="file" />
+                        </span>
+                        &nbsp;
+                        <span id="fileName"></span>
+                        <br /><br />
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <button id="save" type="submit" value="Create" class="btn btn-outline-secondary">
+                            <i class="fa fa-save"></i>
+                            Registrar
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    <a asp-action="Ownlist" class="btn btn-secondary">Volver a la lista</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <link href="~/lib/select2/css/select2.min.css" rel="stylesheet" />
+    <script src="~/lib/select2/js/select2.min.js"></script>
+}
+
+<script type="text/javascript">
+
+    $(function () {
+        $("#worker").select2({
+            placeholder: "-- Seleccione el autorizador --",
+            theme: "bootstrap4",
+            allowClear: true
+        });
+    });
+
+    function showName() {
+        var filename = $("#file").val().split('\\').pop();
+        $("#icon-file").removeClass("fa-upload");
+        $("#icon-file").addClass("fa-file-archive-o");
+        $("#name-button").text(filename);
+    };
+
+    function marcar(value) {
+        $('#ID_MOTIVO').val(value.firstElementChild.id);
+    }
+
+    function validateFunctionalAreas() {
+        let result = parseInt(document.getElementById("Areas").value);
+        if (result <= 0) {
+            $('.areas-message').text("* Seleccinar área")
+        }
+        return result > 0;
+    }
+
+    function validateDate(dateLabel) {
+        var span = $("#" + dateLabel.id).next();
+        let flag = validateDateFormat(dateLabel.value);
+        if (!flag)
+            span.text("Formato no valido");
+    }
+
+    function validateDateFormat(date) {
+
+        let formatDate = /[0123]\d[/][01]\d[/]\d\d\d\d/;
+        return moment(date, "dd/MM/yyyy").isValid() && formatDate.test(date) && date.length == 10;
+    }
+
+    function validateTimeFormat(time) {
+        let result = true;
+        let formatTime = /[01]\d:\d\d( (([Aa]|[Pp])[Mm])|(([Aa]|[Pp])[Mm]))/;
+
+        if (7 > time.length || time.length > 8 || !formatTime.test(time))
+            result = false;
+
+        return result;
+    }
+
+    function validateMotives() {
+        let result = false;
+        $('#Motivos').each(function () {
+            if (this.value.length > 0) {
+                result = true;
+            }
+        });
+
+        if (result)
+            $('.motive-message').text("");
+        else
+            $('.motive-message').text("* Ingresar motivo")
+
+        return result;
+    }
+
+    function validateDateAndTimeOfDeparture() {
+        let result = true;
+
+        $('.exit').each(function () {
+            if (this.value.trim().length == 0) {
+                result = false;
+                $("#" + this.id).next().text("*");
+            }
+            else
+                $("#" + this.id).next().text("");
+        });
+
+        return result;
+    }
+
+    function validateDateAndTimeOfReturn() {
+        let result = true;
+        let isChecked = $('#customSwitches').prop('checked');
+        if (!isChecked) {
+            let commisionCheck = $("#commissionTypeSwitch").prop("checked");
+            if (!commisionCheck) {
+                $('.return').each(function () {
+                    if (this.value.trim().length == 0) {
+                        result = false;
+                        $("#" + this.id).next().text("*");
+                    }
+                    else
+                        $("#" + this.id).next().text("");
+                });
+            }
+            else {
+                $('.returnPro').each(function () {
+                    if (this.value.trim().length == 0) {
+                        result = false;
+                        $("#" + this.id).next().text("*");
+                    }
+                    else
+                        $("#" + this.id).next().text("");
+                });
+            }
+            
+        }
+
+        return result;
+    }
+
+    function validateDateAndTime() {
+        let result = true;
+
+        //result = validateFunctionalAreas();
+
+        result = validateDateAndTimeOfDeparture() && result;
+        console.log(result + " primero");
+
+        result = validateDateAndTimeOfReturn() && result;
+        console.log(result + " segundo");
+
+        if (result)
+            $('.validate-formulary').text("");
+        else
+            $('.validate-formulary').text("* Algunos campos estan vacios o no cumplen con el formato");
+
+        return result;
+    }
+
+    function changeFormat(value) {
+        value = value.substring(0, value.length - 2) + " " + value.substring(value.length - 2);
+        return value;
+    }
+
+    $(document).ready(function () {
+
+        var children = $('#Areas').children('option').removeAttr("selected");
+        children.first().attr("selected", "selected");
+        children.first().attr("disabled", "disabled");
+        $("#HORA_SALIDA").val(moment().format("hh:mm A"));
+
+        $("#FILA_PROGRAMADA").addClass('d-none');
+
+        $("#FECHA_SALIDA_STRING").daterangepicker({
+            singleDatePicker: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+
+        $("#FECHA_PROGRAMADA_STRING").daterangepicker({
+            singleDatePicker: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+
+        $("#FECHA_SALIDA_STRING").change(function () {
+            let date = moment(this.value, "DD/MM/YYYY");
+            $("#FECHA_RETORNO_STRING").val(date.format("DD/MM/YYYY"));
+        });
+
+        $("#FECHA_RETORNO_STRING").change(function () {
+            let date = moment(this.value, "DD/MM/YYYY");
+            let date1 = moment($("#FECHA_SALIDA_STRING").val(), "DD/MM/YYYY");
+            if (date < date1) {
+                $("#FECHA_RETORNO_STRING").val(date1.format("DD/MM/YYYY"));
+            }
+        });
+
+        $("#FECHA_PROGRAMADA_STRING").change(function () {
+            let date = moment(this.value, "DD/MM/YYYY");
+            let dateTmp = moment(moment().format("DD/MM/YYYY"), "DD/MM/YYYY").add(1, 'days');
+            let dateReturn = moment($("#FECHA_RETORNO_PROGRAMADA").val(), "DD/MM/YYYY");
+            if (date < dateTmp) {
+                $("#FECHA_PROGRAMADA_STRING").val(dateTmp.format("DD/MM/YYYY"));
+            }
+
+            if (date > dateReturn) {
+                $("#FECHA_RETORNO_PROGRAMADA").val(date.format("DD/MM/YYYY"));
+            }
+        });
+
+        $("#FECHA_RETORNO_PROGRAMADA").change(function () {
+            let date = moment(this.value, "DD/MM/YYYY");
+            let date1 = moment($("#FECHA_PROGRAMADA_STRING").val(), "DD/MM/YYYY");
+            if (date < date1) {
+                $("#FECHA_RETORNO_PROGRAMADA").val(date1.format("DD/MM/YYYY"));
+            }
+        });
+
+        $("#FECHA_RETORNO_STRING").daterangepicker({
+            singleDatePicker: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+
+        $("#FECHA_RETORNO_PROGRAMADA").daterangepicker({
+            singleDatePicker: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+
+        $('#HORA_SALIDA').change(function () {
+            let flag = validateTimeFormat(this.value);
+            let horaRetorno = $("#HORA_RETORNO");
+            let check = $("#customSwitches").prop("checked");
+            if (flag) {
+                let time = moment(this.value, "LT").add(4, "hour");
+                $("#" + this.id).next().text("");
+                let tmp = time.format("LT");
+                if (tmp.length < 8) {
+                    tmp = "0" + tmp;
+                }
+                //horaRetorno.val(tmp);
+            }
+            else {
+                if (this.value.trim().length > 0)
+                    $("#" + this.id).val(moment().format("hh:mmA"));
+            }
+        });
+
+        /*$('#HORA_RETORNO').change(function () {
+            let flag = validateTimeFormat(this.value);
+
+            if (flag) {
+                $("#" + this.id).next().text("");
+                let time1 = $("#HORA_SALIDA").val();
+                let time2 = changeFormat($("#" + this.id).val());
+                let sds = $("#FECHA_SALIDA_STRING").val().split("/");
+                let eds = $("#FECHA_RETORNO_STRING").val().split("/");
+                let start = moment(sds[1] + "/" + sds[0] + "/" + sds[2] + " " + time1);
+                let end = moment(eds[1] + "/" + eds[0] + "/" + eds[2] + " " + time2);
+                let duration = moment.duration(end.diff(start));
+                let hours = duration.asHours();
+                console.log(sds[1] + "/" + sds[0] + "/" + sds[2]);
+                if (hours < 0) {
+                    time2 = moment(time1, "LT").add(4, "hour");
+                    let time = time2.format("LT");
+                    if (time.length < 8) {
+                        time = "0" + time;
+                    }
+                    time = time.replace(" ", "");
+                    $("#" + this.id).val(time);
+                }
+            }
+            else {
+                if (this.value.trim().length > 0) {
+                    let time1 = $("#HORA_SALIDA").val();
+                    time2 = moment(time1, "LT").add(4, "hour");
+                    let time = time2.format("LT");
+                    if (time.length < 8) {
+                        time = "0" + time;
+                    }
+                    time = time.replace(" ", "");
+                    $("#" + this.id).val(time);
+                }
+            }
+        });*/
+
+        $('#HORA_RETORNO_PROGRAMADA').change(function () {
+            let flag = validateTimeFormat(this.value);
+
+            if (flag) {
+                let time = moment(this.value, "LT");
+
+                let tmp = time.format("LT");
+                if (tmp.length < 8) {
+                    tmp = "0" + tmp;
+                }
+            }
+            else {
+                let time = "08:00AM";
+                $("#" + this.id).val(time);
+            }
+        });
+
+        $("#customSwitches").change(function () {
+            if (this.checked) {
+                $("#FECHA_RETORNO_STRING").attr("placeholder", "");
+                $("#FECHA_RETORNO_PROGRAMADA").attr("placeholder", "");
+                /*$("#HORA_RETORNO").attr("placeholder", "");
+                $("#HORA_RETORNO_PROGRAMADA").attr("placeholder", "");*/
+                $("#FECHA_RETORNO_STRING").val("");
+                $("#FECHA_RETORNO_PROGRAMADA").val("");
+                /*$("#HORA_RETORNO").val("");
+                $('#HORA_RETORNO_PROGRAMADA').val("");*/
+                $("#FECHA_RETORNO_STRING").prop("disabled", true);
+                $("#FECHA_RETORNO_PROGRAMADA").prop("disabled", true);
+                /*$("#HORA_RETORNO").prop("disabled", true);
+                $("#HORA_RETORNO_PROGRAMADA").prop("disabled", true);*/
+                $("#FECHA_RETORNO_STRING").next().text("");
+                $("#FECHA_RETORNO_PROGRAMADA").next().text("");
+                $("#HORA_RETORNO").attr("placeholder", "");
+                $("#HORA_RETORNO_PROGRAMADA").attr("placeholder", "");
+                $("#FLAG_SRETORNO").val(0);
+                $("#FRETORNO").text("Sin hora de retorno");
+            }
+            else {
+                $("#FECHA_RETORNO_STRING").val($("#FECHA_SALIDA_STRING").val());
+                $("#FECHA_RETORNO_PROGRAMADA").val($("#FECHA_PROGRAMADA_STRING").val());
+                /*$("#HORA_RETORNO").val($("#HORA_RETORNO").attr("placeholder"));
+                $("#HORA_RETORNO_PROGRAMADA").val($("#HORA_RETORNO_PROGRAMADA").attr("placeholder"));*/
+                $("#FECHA_RETORNO_STRING").attr("placeholder", "ingrese la fecha de salida");
+                $("#FECHA_RETORNO_PROGRAMADA").attr("placeholder", "ingrese la fecha de salida");
+                $("#HORA_RETORNO").attr("placeholder", "Se tomara cuando se retorne");
+                $("#HORA_RETORNO_PROGRAMADA").attr("placeholder", "Se tomara cuando se retorne");
+                $("#FECHA_RETORNO_STRING").prop("disabled", false);
+                $("#FECHA_RETORNO_PROGRAMADA").prop("disabled", false);
+                /*$("#HORA_RETORNO").prop("disabled", false);
+                $("#HORA_RETORNO_PROGRAMADA").prop("disabled", false);*/
+                $("#FLAG_SRETORNO").val(1);
+                $("#FRETORNO").text("Con hora de retorno");
+            }
+        });
+
+        $("#commissionTypeSwitch").change(function () {
+            if (this.checked) {
+                $("#FILA_NORMAL").addClass('d-none');
+                $("#FILA_NORMAL_2").addClass('d-none');
+                $("#FILA_PROGRAMADA").removeClass('d-none');
+                //$("#FCOMISION").text("COMISIÓN PROGRAMADA");
+                $("#COMISION_TIPO").val(2);
+            }
+            else {
+                $("#FILA_PROGRAMADA").addClass('d-none');
+                $("#FILA_NORMAL").removeClass('d-none');
+                $("#FILA_NORMAL_2").removeClass('d-none');
+                //$("#FCOMISION").text("COMISIÓN NORMAL");
+                $("#COMISION_TIPO").val(1);
+            }
+        });
+
+        $('.clockpicker').clockpicker({
+            placement: 'top',
+            align: 'left',
+            donetext: 'Done',
+            twelvehour: true
+        });
+
+        $('#save').click(function () {
+            $('#USER_USER_NAME').prop("disabled", false);
+            $('#USUARIO_CREA').prop("disabled", false);
+            $('#UNIDAD_ORGANICA').prop("disabled", false);
+            let flag = validateMotives();
+            flag = validateDateAndTime() && flag;
+            let button = $('#save');
+            console.log("El flag: " + flag);
+            if(flag)
+            {
+                button.prop("disabled", !flag);
+                button.prop("disabled", true);
+                document.forms[1].submit();
+            }
+            else
+            {
+                button.prop("disabled", true);
+                setTimeout(() => {
+                    button.prop("disabled", false);
+                }, 1000);
+            }
+        });
+
+        $('.right-format').change(function () {
+            this.value = changeFormat(this.value);
+        });
+
+    });
+
+</script>
